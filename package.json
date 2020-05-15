@@ -1,0 +1,51 @@
+{
+  "name": "tinypng-node-cli",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "tinypng",
+    "tinypng cli",
+    "node",
+    "typescropt",
+    "image optimizer cli"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch 'src/**/*.*' --exec 'ts-node' ./src/main.ts",
+    "build": "rm -rf ./dist && webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weijialiu06/tinypng-node-cli.git"
+  },
+  "bin": {
+    "tinypng": "./bin/tinypng.js"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "commander": "^5.1.0",
+    "download-git-repo": "^3.0.2",
+    "globby": "^11.0.0",
+    "md5-file": "^5.0.0",
+    "mkdirp": "^1.0.4",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.6",
+    "@types/webpack": "^4.41.12",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "inquirer": "^7.1.0",
+    "ora": "^4.0.4",
+    "start-server-webpack-plugin": "^2.2.5",
+    "tinify": "^1.6.0-beta.2",
+    "ts-loader": "^7.0.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

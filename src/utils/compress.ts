@@ -15,20 +15,22 @@ const chalk = require('chalk');
 const md5File = require('md5-file');
 const ora = require('ora');
 
-
 /**
  * 压缩目录下的图片
  * 
  * @param {string} directory 目标目录
  * @returns 
  */
-async function compressDirectory(directory: string) {
+async function compressDirectory(originDirectory: string, outputDirectory?: string) {
   const canUse = await utils.validateTinypng();
   if (!canUse) {
     return false;
   }
 
-  const imageFiles: string[] = globby.sync([`${directory}/**/*.png`, `${directory}/**/*.jpg`]);
+  const imageFiles: string[] = globby.sync([
+    `${originDirectory}/**/*.png`,
+    `${originDirectory}/**/*.jpg`
+  ]);
   const total = imageFiles.length;
 
   for (let i = 0; i < total; i++) {
@@ -46,7 +48,8 @@ async function compressDirectory(directory: string) {
     loading.text = chalk.yellow(`compressing ${currentName} (${i + 1}/${total})`);
     const info = await compressImage(image);
     utils.copyFile(info.compressedSource, image);
-    loading.succeed(chalk.cyan(`compress ${currentName} succeed! saved ${info.compressSize}kb` + chalk.yellow(`(${i + 1}/${total})`)));
+    loading.succeed();
+    // loading.succeed(chalk.cyan(`compress ${currentName} succeed! saved ${info.compressSize}kb` + chalk.yellow(`(${i + 1}/${total})`)));
     loading.stop();
   }
 
@@ -85,7 +88,5 @@ async function compressImage(iamgePath: string): Promise<ICompressResult> {
       });
   });
 }
-
-
 
 export default compressDirectory;

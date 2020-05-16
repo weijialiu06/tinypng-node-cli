@@ -1,18 +1,18 @@
-import { ICommandItem } from "./commands";
-import program from "../program";
-import compressDirectory from "../utils/compress";
+import { ICommandItem } from './commands';
+import program from '../program';
+import compressDirectory from '../utils/compress';
 
 const path = require('path');
 const fs: typeof import('fs') = require('fs');
 const chalk = require('chalk');
 
 export default class Compress implements ICommandItem {
-  command = "compress";
-  description = 'start compressing a directory images';
-  option = {
+  public command = 'compress';
+  public description = 'start compressing a directory images';
+  public option = {
     isDefault: true
   };
-  action() {
+  public action(): void {
     const targetDirectory = program.directory;
     if (!targetDirectory) {
       console.log(chalk.red("error= required option '-d, --directory <Directory>' not specified"));

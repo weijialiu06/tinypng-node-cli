@@ -21,38 +21,36 @@ const ora = require('ora');
  * @param {string} directory 目标目录
  * @returns 
  */
-async function compressDirectory(originDirectory: string, outputDirectory?: string) {
+async function compressDirectory(originDirectory: string, outputDirectory?: string): Promise<void> {
   const canUse = await utils.validateTinypng();
-  if (!canUse) {
-    return false;
-  }
+  if (canUse) {
 
-  const imageFiles: string[] = globby.sync([
-    `${originDirectory}/**/*.png`,
-    `${originDirectory}/**/*.jpg`
-  ]);
-  const total = imageFiles.length;
+    const imageFiles: string[] = globby.sync([
+      `${originDirectory}/**/*.png`,
+      `${originDirectory}/**/*.jpg`
+    ]);
+    const total = imageFiles.length;
 
-  for (let i = 0; i < total; i++) {
-    const image = imageFiles[i];
-    const currentName = path.basename(image);
-    const cacheFileName = utils.getFileNameInCache(image);
-    if (cacheFileName) {
-      console.log(chalk.green(`file ${currentName} has been compressed `) + chalk.yellow(`(${i + 1}/${total})`));
-      const cacheFile = `${utils.getCacheDirectory()}/${cacheFileName}`;
-      utils.copyFile(cacheFile, image); //  get a compress texture from the cached file;
-      continue;
+    for (let i = 0; i < total; i++) {
+      const image = imageFiles[i];
+      const currentName = path.basename(image);
+      const cacheFileName = utils.getFileNameInCache(image);
+      if (cacheFileName) {
+        console.log(chalk.green(`file ${currentName} has been compressed `) + chalk.yellow(`(${i + 1}/${total})`));
+        const cacheFile = `${utils.getCacheDirectory()}/${cacheFileName}`;
+        utils.copyFile(cacheFile, image); //  get a compress texture from the cached file;
+        continue;
+      }
+      const loading = ora(`'start compressing...'`).start();
+      loading.color = 'yellow';
+      loading.text = chalk.yellow(`compressing ${currentName} (${i + 1}/${total})`);
+      const info = await compressImage(image);
+      utils.copyFile(info.compressedSource, image);
+      loading.succeed();
+      // loading.succeed(chalk.cyan(`compress ${currentName} succeed! saved ${info.compressSize}kb` + chalk.yellow(`(${i + 1}/${total})`)));
+      loading.stop();
     }
-    const loading = ora(`'start compressing...'`).start();
-    loading.color = 'yellow';
-    loading.text = chalk.yellow(`compressing ${currentName} (${i + 1}/${total})`);
-    const info = await compressImage(image);
-    utils.copyFile(info.compressedSource, image);
-    loading.succeed();
-    // loading.succeed(chalk.cyan(`compress ${currentName} succeed! saved ${info.compressSize}kb` + chalk.yellow(`(${i + 1}/${total})`)));
-    loading.stop();
   }
-
 }
 
 /**
